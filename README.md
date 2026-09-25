@@ -1,3 +1,7 @@
+This project was jointly developed by **Edward Ji** (@EdwardBoyuanJi) and **Francis Ji** (@FrancisJi).
+
+Both authors contributed equally to the research design, data engineering, model development, backtesting, implementation, and documentation.
+
 # Shanghai Gold Volatility Forecasting & Options Research
 
 [中文说明](README.zh-CN.md) · [Research report](docs/research_report_cn.pdf) · [Strategy manual](docs/strategy_manual_cn.pdf)
