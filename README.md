@@ -97,7 +97,7 @@ The public repository contains derived summaries, not vendor raw quotes or tick 
 
 Python 3.12 is recommended.
 
-    git clone https://github.com/OWNER/au-volatility-forecasting.git
+    git clone https://github.com/FrancisJi/au-volatility-forecasting.git
     cd au-volatility-forecasting
     python3 -m venv .venv
     source .venv/bin/activate
@@ -158,4 +158,3 @@ The source code shows how those datasets are downloaded and transformed. To reru
 ## Data, license, and disclaimer
 
 Code is published for portfolio review and non-commercial research under the terms in [LICENSE](LICENSE). Third-party datasets remain subject to their original vendors' licenses and are not included. This repository is research software, not investment advice or a live trading system. Historical backtests are not guarantees of future performance.
-
