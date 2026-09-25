@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>沪金波动率｜模型观测台</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到预测结果</a>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true"><span>Au</span><small>79</small></div>
+    <div>
+      <p class="eyebrow">AU REALIZED VOLATILITY · LOCAL RESEARCH CONSOLE</p>
+      <p class="brand-title">沪金波动率模型观测台</p>
+    </div>
+    <div class="topbar-meta">
+      <span id="model-version">正在读取模型…</span>
+      <span class="local-badge">仅本机</span>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="input-rail" aria-labelledby="input-title">
+      <div class="rail-heading">
+        <p class="section-kicker">输入面板</p>
+        <h2 id="input-title">今日可观测信息</h2>
+        <p>修改特征后可直接调用冻结模型。页面不会联网，也不会下单。</p>
+      </div>
+      <div class="sample-strip">
+        <div><span>交易日</span><strong id="input-date">—</strong></div>
+        <div><span>AU 合约</span><strong id="input-contract">—</strong></div>
+      </div>
+      <form id="feature-form">
+        <div id="feature-groups" class="feature-groups"></div>
+        <button class="run-button" type="submit">
+          <span>运行 5 / 20 / 40 日预测</span>
+          <span aria-hidden="true">→</span>
+        </button>
+        <button id="reset-button" class="reset-button" type="button">恢复冻结样本</button>
+      </form>
+      <p id="form-status" class="form-status" role="status" aria-live="polite">等待模型输入。</p>
+    </aside>
+
+    <main id="main" class="main-stage">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="section-kicker">预测期限结构</p>
+          <h1 id="hero-title">未来波动率，<br><em>两种证据</em>同时看。</h1>
+          <p class="hero-lede">主模型吸收跨市场 IV；稳健模型刻意剔除 IV。两者方向一致时，信号才更值得进入策略层。</p>
+          <div class="assay-stamp" aria-label="模型状态">
+            <span>MODEL ASSAY</span>
+            <strong id="agreement-label">—</strong>
+            <small id="agreement-detail">等待预测</small>
+          </div>
+        </div>
+        <div class="term-panel">
+          <div class="panel-head">
+            <div>
+              <span>年化波动率</span>
+              <strong id="latest-date">—</strong>
+            </div>
+            <div class="legend" aria-label="图例">
+              <span><i class="dot main-dot"></i>主模型</span>
+              <span><i class="dot robust-dot"></i>无 IV 稳健模型</span>
+              <span><i class="dot current-dot"></i>当前 RV</span>
+            </div>
+          </div>
+          <svg id="term-chart" class="term-chart" viewBox="0 0 760 390" role="img" aria-label="5、20、40日预测波动率期限结构"></svg>
+          <div id="forecast-readouts" class="forecast-readouts"></div>
+        </div>
+      </section>
+
+      <section class="diagnostic-grid" aria-label="模型诊断">
+        <article class="diagnostic-card">
+          <span class="card-label">当前实现波动率</span>
+          <strong id="current-vol">—</strong>
+          <small>252 日年化口径</small>
+        </article>
+        <article class="diagnostic-card">
+          <span class="card-label">最大模型分歧</span>
+          <strong id="max-spread">—</strong>
+          <small>主模型与稳健模型，单位：波动率点</small>
+        </article>
+        <article class="diagnostic-card diagnostic-wide">
+          <span class="card-label">读数规则</span>
+          <p id="interpretation">先看两模型相对当前 RV 的方向，再看分歧大小；模型输出不是交易信号，仍需与期权 IV、VRP、盘口和风险预算结合。</p>
+        </article>
+      </section>
+
+      <section class="history-section" aria-labelledby="history-title">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">历史检验</p>
+            <h2 id="history-title">预测不是一条漂亮曲线，<br>而是一串可核验的错误。</h2>
+          </div>
+          <div class="horizon-tabs" role="group" aria-label="预测期限">
+            <button type="button" class="horizon-tab active" data-horizon="5">5 日</button>
+            <button type="button" class="horizon-tab" data-horizon="20">20 日</button>
+            <button type="button" class="horizon-tab" data-horizon="40">40 日</button>
+          </div>
+        </div>
+        <div class="history-panel">
+          <svg id="history-chart" class="history-chart" viewBox="0 0 1080 430" role="img" aria-label="历史预测与实现波动率"></svg>
+        </div>
+      </section>
+
+      <section class="metrics-section" aria-labelledby="metrics-title">
+        <div class="section-header compact">
+          <div>
+            <p class="section-kicker">全样本走步检验</p>
+            <h2 id="metrics-title">同 Persistence 正面对比</h2>
+          </div>
+          <p>QLIKE、RMSE 越低越好；OOS R²、方向准确率越高越好。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>期限</th><th>模型</th><th>样本</th><th>QLIKE</th><th>Log-RV RMSE</th><th>OOS R²</th><th>方向准确率</th></tr>
+            </thead>
+            <tbody id="metrics-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer>
+        <p><strong>研究边界：</strong>本页面只调用冻结的波动率预测模型，不获取实时行情、不计算期权公平价、不生成订单。未来数据必须先经过同口径、点时可得的特征工程。</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

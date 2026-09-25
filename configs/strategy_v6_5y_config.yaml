@@ -1,0 +1,65 @@
+project:
+  version: strategy_v6_five_year_20260830
+  parent_strategy: strategy_v5_profit_enhancement_20260830
+
+sample:
+  requested_backtest_start: 2021-07-01
+  evaluation_end: 2026-07-27
+  minimum_calendar_years: 5.0
+
+backfill:
+  au_start: 2018-01-01
+  au_end: 2019-09-16
+  slv_start: 2018-05-01
+  slv_end: 2019-09-02
+  fred_legacy_series: DTWEXM
+  fred_legacy_start: 2018-01-01
+  fred_legacy_end: 2019-02-28
+  databento_maximum_cost_usd: 25.0
+  raw_dir: data/raw/strategy_v6_5y
+
+model:
+  minimum_training_samples: 504
+  retrain_frequency: monthly
+  signal_minimum_volatility_edge: 0.015
+
+execution:
+  initial_capital: 10000000.0
+  base_risk_budget_fraction_per_trade: 0.075
+  short_risk_capital_fraction_of_notional: 0.20
+  long_minimum_risk_capital_fraction_of_notional: 0.05
+  risk_free_rate: 0.018
+  option_commission_per_contract_side: 5.0
+  option_exercise_fee_per_contract: 5.0
+  futures_commission_per_contract_side: 5.0
+  futures_slippage_ticks_per_trade: 1.0
+  future_tick: 0.02
+  maximum_portfolio_risk_fraction: 0.30
+  quote_maximum_age_seconds: 10.0
+
+strategies:
+  - name: v3_depth_5x
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 1
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: null
+    sizing_mode: flat
+  - name: narrow_spread_25pct
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 1
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: 0.25
+    sizing_mode: flat
+  - name: max_profit_candidate
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 5
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: 0.50
+    sizing_mode: edge_spread_weighted
+
+outputs:
+  feature_path: data/processed/strategy_v6_5y/model_features_daily.parquet
+  leakage_audit_path: data/outputs/strategy_v6_5y/leakage_audit.csv
+  forecast_path: data/outputs/strategy_v6_5y/strategy_model_forecasts.parquet
+  opportunities_path: data/outputs/strategy_v6_5y/opportunities.parquet
+  output_dir: data/outputs/strategy_v6_5y

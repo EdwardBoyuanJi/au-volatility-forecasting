@@ -1,0 +1,7 @@
+﻿year,net_profit,trading_days,return_on_initial_capital,trade_count,total_lots,win_rate,strategy
+2021,0.0,125,0.0,0.0,0.0,0.0,final_narrow_rb10_hedge2d
+2022,0.0,242,0.0,0.0,0.0,0.0,final_narrow_rb10_hedge2d
+2023,0.0,242,0.0,0.0,0.0,0.0,final_narrow_rb10_hedge2d
+2024,37420.000000000364,242,0.0037420000000000365,2.0,10.0,0.5,final_narrow_rb10_hedge2d
+2025,207615.00000000058,243,0.020761500000000058,5.0,16.0,0.8,final_narrow_rb10_hedge2d
+2026,264725.0000000001,135,0.02647250000000001,5.0,16.0,1.0,final_narrow_rb10_hedge2d

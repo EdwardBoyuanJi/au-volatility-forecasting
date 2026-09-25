@@ -1,0 +1,39 @@
+project:
+  version: final_dual_har_x_20260831
+  description: Frozen AU realized-volatility forecast engine for 5/20/40 trading-day horizons.
+  annualization_days: 252
+  epsilon: 1.0e-12
+  model_cutoff: "2026-08-24"
+
+inputs:
+  feature_history_path: data/processed/strategy_v6_5y/model_features_daily.parquet
+  walk_forward_history_path: data/outputs/strategy_v6_5y/strategy_model_forecasts.parquet
+
+training:
+  minimum_training_samples: 504
+  interval_quantiles: [0.10, 0.50, 0.90]
+  horizons: [5, 20, 40]
+  alpha_by_model:
+    main: 10.0
+    robust: 0.01
+
+models:
+  main:
+    model_name: har__mse_log__macro+gvz+slv_iv+us_epu
+    family: har
+    objective: mse_log
+    blocks: [macro, gvz, slv_iv, us_epu]
+  robust:
+    model_name: har__qlike__macro+us_epu
+    family: har
+    objective: qlike
+    blocks: [macro, us_epu]
+
+outputs:
+  model_dir: models/final_prediction_model
+  manifest_path: models/final_prediction_model/model_manifest.json
+  latest_input_path: data/model_inputs/latest_feature_snapshot.csv
+  reference_csv_path: data/outputs/final_prediction_model/latest_predictions.csv
+  reference_json_path: data/outputs/final_prediction_model/latest_predictions.json
+  evaluation_path: data/outputs/final_prediction_model/walk_forward_metrics.csv
+  coefficient_path: data/outputs/final_prediction_model/model_coefficients.csv

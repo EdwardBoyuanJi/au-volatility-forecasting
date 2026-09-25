@@ -1,0 +1,38 @@
+project:
+  version: strategy_v5_profit_enhancement_20260830
+  parent_strategy: strategy_v3_v4_20260828
+
+data:
+  raw_dir: data/raw/strategy_real_quotes
+  opportunities_path: data/outputs/volatility_strategy_opportunities.parquet
+  option_daily_path: data/raw/tqsdk_au_option_daily_strategy.parquet
+  futures_daily_path: data/raw/tqsdk_au_futures_daily_all_contracts.parquet
+  quote_maximum_age_seconds: 10.0
+
+execution:
+  initial_capital: 10000000.0
+  base_risk_budget_fraction_per_trade: 0.075
+  short_risk_capital_fraction_of_notional: 0.20
+  long_minimum_risk_capital_fraction_of_notional: 0.05
+  risk_free_rate: 0.018
+  option_commission_per_contract_side: 5.0
+  option_exercise_fee_per_contract: 5.0
+  futures_commission_per_contract_side: 5.0
+  futures_slippage_ticks_per_trade: 1.0
+  future_tick: 0.02
+  maximum_portfolio_risk_fraction: 0.30
+
+experiments:
+  capacity_depths: [1, 3, 5, 8, 12]
+  include_unlimited_depth: true
+  hedge_intervals: [1, 2, 3, 5, 999]
+  delta_change_thresholds: [1, 2, 3]
+  edge_thresholds: [0.015, 0.030, 0.050, 0.070]
+  maximum_relative_spreads: [0.25, 0.50, 1.00]
+  risk_budget_fractions: [0.050, 0.075, 0.100, 0.125, 0.150]
+  causal_selector_minimum_matured_signals: 8
+  causal_selector_minimum_executed_trades: 4
+  holdout_start_date: 2026-01-01
+
+outputs:
+  output_dir: data/outputs/strategy_v5_profit_enhancement

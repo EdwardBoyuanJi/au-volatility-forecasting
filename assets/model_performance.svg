@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560">
+<rect width="100%" height="100%" rx="22" fill="#f6f8fb"/>
+<text x="54.0" y="58.0" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" text-anchor="start" fill="#26354a">Out-of-sample volatility forecast performance</text>
+<text x="54.0" y="86.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#657386">Expanded walk-forward evaluation; higher is better</text>
+<text x="54.0" y="130.0" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="650" text-anchor="start" fill="#26354a">OOS R² vs persistence</text>
+<text x="54.0" y="215.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">5D</text>
+<rect x="106" y="192" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="192" width="178.5" height="20" rx="10" fill="#b37b18"/>
+<text x="470.0" y="207.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">51.0%</text>
+<rect x="106" y="223" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="223" width="144.8" height="20" rx="10" fill="#27796e"/>
+<text x="470.0" y="238.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">41.4%</text>
+<text x="54.0" y="317.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">20D</text>
+<rect x="106" y="294" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="294" width="185.9" height="20" rx="10" fill="#b37b18"/>
+<text x="470.0" y="309.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">53.1%</text>
+<rect x="106" y="325" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="325" width="170.1" height="20" rx="10" fill="#27796e"/>
+<text x="470.0" y="340.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">48.6%</text>
+<text x="54.0" y="419.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">40D</text>
+<rect x="106" y="396" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="396" width="193.9" height="20" rx="10" fill="#b37b18"/>
+<text x="470.0" y="411.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">55.4%</text>
+<rect x="106" y="427" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="106" y="427" width="184.9" height="20" rx="10" fill="#27796e"/>
+<text x="470.0" y="442.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">52.8%</text>
+<text x="589.0" y="130.0" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="650" text-anchor="start" fill="#26354a">Direction accuracy</text>
+<text x="589.0" y="215.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">5D</text>
+<rect x="641" y="192" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="192" width="258.5" height="20" rx="10" fill="#b37b18"/>
+<text x="1005.0" y="207.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">73.9%</text>
+<rect x="641" y="223" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="223" width="248.4" height="20" rx="10" fill="#27796e"/>
+<text x="1005.0" y="238.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">71.0%</text>
+<text x="589.0" y="317.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">20D</text>
+<rect x="641" y="294" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="294" width="267.2" height="20" rx="10" fill="#b37b18"/>
+<text x="1005.0" y="309.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">76.4%</text>
+<rect x="641" y="325" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="325" width="253.7" height="20" rx="10" fill="#27796e"/>
+<text x="1005.0" y="340.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">72.5%</text>
+<text x="589.0" y="419.0" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" text-anchor="start" fill="#4d5c70">40D</text>
+<rect x="641" y="396" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="396" width="267.2" height="20" rx="10" fill="#b37b18"/>
+<text x="1005.0" y="411.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#b37b18">76.3%</text>
+<rect x="641" y="427" width="350" height="20" rx="10" fill="#e4e9f0"/>
+<rect x="641" y="427" width="259.6" height="20" rx="10" fill="#27796e"/>
+<text x="1005.0" y="442.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" text-anchor="start" fill="#27796e">74.2%</text>
+<circle cx="61" cy="506" r="7" fill="#b37b18"/>
+<text x="76.0" y="511.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="600" text-anchor="start" fill="#26354a">Main HAR-X</text>
+<circle cx="261" cy="506" r="7" fill="#27796e"/>
+<text x="276.0" y="511.0" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="600" text-anchor="start" fill="#26354a">IV-free robust HAR-X</text>
+<text x="1064.0" y="511.0" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="400" text-anchor="end" fill="#7b8798">As of 2026-08-24</text>
+</svg>

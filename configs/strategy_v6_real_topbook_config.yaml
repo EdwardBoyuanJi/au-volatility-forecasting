@@ -1,0 +1,61 @@
+project:
+  version: strategy_v6_real_topbook_20260830
+  parent_strategy: strategy_v6_five_year_20260830
+
+sample:
+  requested_backtest_start: 2021-07-01
+  evaluation_end: 2026-07-27
+  minimum_calendar_years: 5.0
+
+inputs:
+  opportunities_path: data/outputs/strategy_v6_5y/opportunities.parquet
+  option_daily_path: data/raw/tqsdk_au_option_daily_strategy.parquet
+  futures_daily_path: data/raw/tqsdk_au_futures_daily_all_contracts.parquet
+  entry_quote_dir: data/raw/strategy_real_quotes
+  hedge_tick_path: data/raw/strategy_v6_real_topbook/futures_hedge_topbook_ticks.parquet
+  hedge_coverage_path: data/raw/strategy_v6_real_topbook/futures_hedge_topbook_coverage.csv
+
+download:
+  close_window_start: "14:54:00"
+  close_window_end: "15:01:00"
+  close_target_time: "15:00:00"
+  maximum_quote_age_seconds: 60.0
+  flush_every: 20
+
+execution:
+  initial_capital: 10000000.0
+  base_risk_budget_fraction_per_trade: 0.075
+  short_risk_capital_fraction_of_notional: 0.20
+  long_minimum_risk_capital_fraction_of_notional: 0.05
+  risk_free_rate: 0.018
+  option_commission_per_contract_side: 5.0
+  option_exercise_fee_per_contract: 5.0
+  futures_commission_per_contract_side: 5.0
+  futures_slippage_ticks_per_trade: 0.0
+  future_tick: 0.02
+  maximum_portfolio_risk_fraction: 0.30
+  entry_quote_maximum_age_seconds: 10.0
+  enforce_futures_visible_depth: true
+
+strategies:
+  - name: v3_depth_5x
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 1
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: null
+    sizing_mode: flat
+  - name: narrow_spread_25pct
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 1
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: 0.25
+    sizing_mode: flat
+  - name: max_profit_candidate
+    displayed_depth_multiplier: 5
+    hedge_interval_trading_days: 5
+    minimum_edge_strength: 0.015
+    maximum_relative_spread: 0.50
+    sizing_mode: edge_spread_weighted
+
+outputs:
+  output_dir: data/outputs/strategy_v6_real_topbook

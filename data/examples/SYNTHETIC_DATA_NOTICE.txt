@@ -1,0 +1,3 @@
+Every file in this directory is generated from artificial data solely to
+demonstrate schemas and exercise the software. Nothing here is a real AU or GC
+forecast, a market estimate, a trading signal, or a model-performance claim.

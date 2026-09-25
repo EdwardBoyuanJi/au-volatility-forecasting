@@ -1,0 +1,41 @@
+.env
+.env.*
+!.env.example
+.DS_Store
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# Licensed vendor data and local research outputs
+data/raw/
+data/interim/
+data/processed/
+data/history/
+data/outputs/*
+!data/outputs/final_prediction_model/
+!data/outputs/final_prediction_model/latest_predictions.csv
+!data/outputs/final_prediction_model/latest_predictions.json
+!data/outputs/final_prediction_model/model_coefficients.csv
+!data/outputs/final_prediction_model/walk_forward_metrics.csv
+!data/outputs/strategy_v3_real_quotes/
+!data/outputs/strategy_v3_real_quotes/metrics.csv
+!data/outputs/strategy_v5_profit_enhancement/
+!data/outputs/strategy_v5_profit_enhancement/metrics.csv
+
+# Only the audited frozen model artifacts are public
+models/*
+!models/final_prediction_model/
+!models/final_prediction_model/**
+
+# Local dashboard outputs and package archives
+*.zip
+*.tar
+*.tar.gz
+deliverables/
+github_release/

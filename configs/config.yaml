@@ -1,0 +1,254 @@
+project:
+  name: au_realized_volatility_model
+  config_version: "1.2.0"
+  random_seed: 20260730
+  timezone: Asia/Shanghai
+  model_cutoff_time: "15:05"
+  epsilon: 1.0e-12
+  annualization_days: 252
+
+dates:
+  start_date: "2016-01-01"
+  end_date: null
+  future_calendar_buffer_days: 100
+  small_download_days: 10
+
+data_sources:
+  tqsdk:
+    exchange: SHFE
+    product: au
+    duration_seconds: 300
+    chunk_days: 180
+    request_pause_seconds: 0.0
+    # AU contracts can be listed well before delivery. This only limits
+    # obviously post-sample contracts; actual selection still uses observed bars.
+    listing_lead_buffer_days: 370
+  au_options:
+    selection_start_date: "2020-06-16"
+    selection_end_date: null
+    metadata_batch_size: 200
+    request_pause_seconds: 0.0
+  databento:
+    dataset: GLBX.MDP3
+    # Databento's volume-ranked continuous symbol resolves from the previous
+    # day's volume and therefore supplies one liquid, point-in-time GC future
+    # without paying for every outright and spread in the GC parent universe.
+    symbols: ["GC.v.0"]
+    stype_in: continuous
+    stype_out: instrument_id
+    schema: ohlcv-1m
+    execute_download: false
+    maximum_cost_usd: 25.0
+  slv_options:
+    options_dataset: OPRA.PILLAR
+    underlying_dataset: ARCX.PILLAR
+    parent_symbol: SLV.OPT
+    underlying_symbol: SLV
+    definitions_schema: definition
+    options_schema: ohlcv-1d
+    underlying_schema: ohlcv-1d
+    target_dte_calendar_days: 30
+    minimum_dte_calendar_days: 14
+    maximum_dte_calendar_days: 60
+    use_bracketing_expiries: false
+    # One closest-to-spot strike at the nearest-to-30-day expiry keeps the
+    # historical OPRA pull below the project-wide $25 cap while retaining a
+    # matched call-put pair for forward estimation.
+    strikes_each_side: 0
+    strike_band_fraction: 0.20
+    risk_free_rate: 0.03
+    execute_download: false
+    maximum_cost_usd: 25.0
+    definitions_path: data/raw/databento_slv_option_definitions.parquet
+    underlying_path: data/raw/databento_slv_underlying_1d.parquet
+    option_prices_path: data/raw/databento_slv_option_ohlcv_1d.parquet
+    iv_path: data/raw/databento_slv_iv_30d.parquet
+  fred:
+    series:
+      broad_dollar: DTWEXBGS
+      us10y_real: DFII10
+      usdcny: DEXCHUS
+      gvz: GVZCLS
+      us_epu: USEPUINDXD
+      gepu: GEPUCURRENT
+    use_initial_release_vintage: true
+    # FRED JSON limits a request to 2,000 vintage dates. Four calendar years
+    # remain safely below that limit, including leap years.
+    vintage_chunk_years: 4
+    conservative_available_time_et: "23:59:59"
+    maximum_staleness_calendar_days: 10
+    maximum_staleness_calendar_days_by_series:
+      broad_dollar: 10
+      us10y_real: 10
+      usdcny: 10
+      gvz: 10
+      us_epu: 10
+      # GEPU is monthly and historically arrived in delayed/batched releases.
+      # Keep the latest causally released value until a newer release, subject
+      # to a roughly 13-month emergency cap rather than a daily freshness rule.
+      gepu: 400
+  gpr:
+    url: "https://www.matteoiacoviello.com/gpr_files/data_gpr_daily_recent.xls"
+    output_path: data/raw/gpr_daily_recent.parquet
+    # The author republishes the daily workbook weekly and revises recent data.
+    # Seven calendar days is a conservative observable-date lag for the latest
+    # workbook. The vintage limitation is recorded explicitly in the output.
+    conservative_release_lag_calendar_days: 7
+    conservative_available_time_et: "23:59:59"
+    maximum_staleness_calendar_days: 14
+  events:
+    raw_html_dir: data/raw/event_calendar_html
+    bls_url_template: "https://www.bls.gov/schedule/{year}/home.htm"
+    fomc_calendar_url: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    fomc_historical_url_template: "https://www.federalreserve.gov/monetarypolicy/fomchistorical{year}.htm"
+    # FOMC archive pages do not retain a point-in-time schedule-publication field.
+    # January 1 of the meeting year is the deliberately conservative default.
+    fomc_known_at_rule: start_of_event_year
+    # BLS can return HTTP 403 to automated clients. FRED republishes the
+    # official release dates and exposes future dates through its API.
+    fred_release_fallback: true
+    fred_release_ids:
+      cpi: 10
+      nfp: 50
+
+market:
+  bar_minutes: 5
+  minimum_au_bars: 30
+  minimum_comex_nonoverlap_bars: 6
+  maximum_bar_gap_minutes: 5
+  real_rate_change_unit: basis_points
+
+jump:
+  alpha: 0.01
+  use_finite_sample_correction: true
+
+features:
+  har_windows: [1, 5, 22]
+  horizons: [5, 20, 40]
+
+control_experiment:
+  blocks:
+    - jump
+    - macro
+    - events
+    - gvz
+    - slv_iv
+    - us_epu
+    - gepu
+    - gpr
+  base_families: [har, harq, garch]
+  objectives: [mse_log, qlike]
+  alpha_grid: [0.001, 0.01, 0.1, 1.0, 10.0]
+  alpha_cv_splits: 3
+  minimum_cv_test_samples: 40
+  # Alpha is selected causally on the first OOS training window and then held
+  # fixed. This makes thousands of subset comparisons computationally feasible
+  # without letting later OOS outcomes tune hyperparameters.
+  freeze_alpha_after_initial_selection: true
+  retrain_frequency: monthly
+  minimum_training_samples: 504
+  minimum_garch_observations: 252
+  garch_refit_frequency: monthly
+  parallel_jobs: 4
+
+model:
+  champion_selection_metric: qlike
+  training_window: expanding
+  rolling_training_years: 5
+  minimum_training_years: 3
+  minimum_training_samples: 504
+  retrain_frequency: monthly
+  prediction_frequency: daily
+  alpha_grid: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  inner_cv_splits: 5
+  minimum_cv_test_samples: 20
+  # QLIKE is fitted as penalized Gamma deviance with a log link, which is
+  # equivalent to QLIKE up to a constant factor and guarantees positive RV.
+  qlike_max_iter: 2000
+  qlike_tol: 1.0e-9
+  interval_quantiles: [0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95]
+  minimum_interval_samples: 30
+  rolling_error_window: 252
+  minimum_conditional_samples: 30
+  conditional_volatility_quantiles: [0.3333333333, 0.6666666667]
+
+strategy:
+  # Fixed ex-ante research rules. No threshold is optimized on strategy P&L.
+  risk_free_rate: 0.018
+  minimum_vrp_history: 12
+  minimum_volatility_edge: 0.015
+  minimum_total_open_interest: 20
+  minimum_leg_volume: 1
+  minimum_premium_ticks: 6
+  initial_capital: 10000000.0
+  risk_budget_fraction_per_trade: 0.075
+  risk_capital_fraction_of_notional: 0.20
+  costs:
+    option_commission_per_contract_side: 5.0
+    option_exercise_fee_per_contract: 5.0
+    futures_commission_per_contract_side: 5.0
+    option_slippage_ticks_per_side: 1.0
+    futures_slippage_ticks_per_trade: 1.0
+  stress:
+    underlying_shock: 0.08
+    volatility_multiplier: 1.75
+    volatility_additive: 0.15
+  sensitivity:
+    volatility_edges: [0.0, 0.01, 0.015, 0.025, 0.04]
+    cost_multipliers: [0.0, 1.0, 2.0, 3.0, 5.0]
+  opportunities_path: data/outputs/volatility_strategy_opportunities.parquet
+  trades_path: data/outputs/volatility_strategy_trades.csv
+  daily_path: data/outputs/volatility_strategy_daily.csv
+  metrics_path: data/outputs/volatility_strategy_metrics.csv
+  breakdown_path: data/outputs/volatility_strategy_breakdown.csv
+  stress_path: data/outputs/volatility_strategy_tail_stress.csv
+  sensitivity_path: data/outputs/volatility_strategy_sensitivity.csv
+  cost_sensitivity_path: data/outputs/volatility_strategy_cost_sensitivity.csv
+
+strategy_v2:
+  # A separately versioned research strategy. The original `strategy` block,
+  # its code and its outputs remain unchanged and are the fallback baseline.
+  strategy_version: strategy_v2_20260828_final
+  output_dir: data/outputs/strategy_v2
+  forward_effective_trade_date: "2026-08-28"
+  forecast_upper_quantile: 0.90
+  forecast_residual_window: 252
+  minimum_forecast_residual_samples: 30
+  tail_model_minimum_samples: 504
+  tail_model_ridge_alpha: 10.0
+  pnl_model_minimum_samples: 60
+  pnl_model_ridge_alpha: 10.0
+  pnl_residual_quantile: 0.25
+  minimum_volatility_edge: 0.015
+  maximum_tail_imbalance: 0.70
+  maximum_jump_share: 0.25
+  wing_width_fraction: 0.08
+  initial_capital: 10000000.0
+  max_loss_fraction_per_trade: 0.02
+  max_margin_fraction_per_expiry: 0.075
+  max_portfolio_margin_fraction: 0.15
+  delta_band_per_option: 0.10
+  risk_free_rate: 0.018
+  costs:
+    option_exchange_fee: 2.0
+    option_broker_fee: 1.0
+    option_exercise_exchange_fee: 2.0
+    futures_broker_fee: 1.0
+    futures_hedge_slippage_ticks: 1.0
+
+outputs:
+  features_path: data/processed/model_features_daily.parquet
+  predictions_path: data/outputs/walk_forward_predictions.parquet
+  latest_csv_path: data/outputs/latest_forecast.csv
+  latest_json_path: data/outputs/latest_forecast.json
+  metrics_path: data/outputs/model_metrics.csv
+  leakage_audit_path: data/outputs/leakage_audit.csv
+  model_dir: models
+  control_predictions_path: data/outputs/control_experiment_predictions.parquet
+  control_metrics_path: data/outputs/control_experiment_metrics.csv
+  control_incremental_path: data/outputs/control_incremental_effects.csv
+  control_unified_path: data/outputs/control_unified_ranking.csv
+  control_family_summary_path: data/outputs/control_family_distribution_summary.csv
+  control_selection_test_path: data/outputs/control_selection_test_champions.csv
+  control_report_path: CONTROL_VARIABLE_EXPERIMENT_REPORT.md
+  strategy_forecasts_path: data/outputs/strategy_model_forecasts.parquet

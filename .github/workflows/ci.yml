@@ -1,0 +1,25 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements-lock.txt
+      - name: Verify frozen prediction package
+        run: python scripts/35_verify_final_prediction_model.py
+      - name: Run tests
+        env:
+          PYTHONPATH: src
+        run: pytest -q
+
